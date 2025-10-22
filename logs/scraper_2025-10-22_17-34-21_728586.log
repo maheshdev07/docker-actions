@@ -1,0 +1,15 @@
+2025-10-22 17:34:21.729 | INFO     | __main__:main:191 - ============================================================
+2025-10-22 17:34:21.730 | INFO     | __main__:main:192 - GST Scraper Started
+2025-10-22 17:34:21.731 | INFO     | __main__:main:193 - ============================================================
+2025-10-22 17:34:21.732 | INFO     | utils:create_directories:80 - Directories created/verified
+2025-10-22 17:34:21.733 | INFO     | __main__:__init__:29 - GST Scraper initialized
+2025-10-22 17:34:21.733 | INFO     | __main__:main:199 - Running in DEMO mode - generating sample data
+2025-10-22 17:34:21.736 | INFO     | __main__:scrape_sample_data:126 - Generating sample GST data for demonstration
+2025-10-22 17:34:21.753 | INFO     | utils:save_to_csv:49 - Data saved to data\gst_data_20251022_173421.csv
+2025-10-22 17:34:21.758 | INFO     | utils:save_to_json:59 - Data saved to data\gst_data_20251022_173421.json
+2025-10-22 17:34:21.759 | SUCCESS  | __main__:main:215 - Scraping completed! Saved 3 records
+2025-10-22 17:34:21.759 | SUCCESS  | __main__:main:216 - CSV: data\gst_data_20251022_173421.csv
+2025-10-22 17:34:21.759 | SUCCESS  | __main__:main:217 - JSON: data\gst_data_20251022_173421.json
+2025-10-22 17:34:21.759 | INFO     | __main__:main:222 - ============================================================
+2025-10-22 17:34:21.760 | INFO     | __main__:main:223 - GST Scraper Finished
+2025-10-22 17:34:21.760 | INFO     | __main__:main:224 - ============================================================
