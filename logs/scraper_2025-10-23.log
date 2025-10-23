@@ -1796,3 +1796,51 @@
 2025-10-23 16:00:36 | INFO     | src.scraper:__init__:47 | Demo mode: True
 2025-10-23 16:00:36 | INFO     | src.scraper:__init__:48 | Max retries: 3
 2025-10-23 16:00:36 | INFO     | src.scraper:__init__:49 | Request timeout: 30s
+2025-10-23 16:03:31 | INFO     | src.scraper:__init__:46 | GST Scraper initialized
+2025-10-23 16:03:31 | INFO     | src.scraper:__init__:47 | Demo mode: True
+2025-10-23 16:03:31 | INFO     | src.scraper:__init__:48 | Max retries: 3
+2025-10-23 16:03:31 | INFO     | src.scraper:__init__:49 | Request timeout: 30s
+2025-10-23 16:04:02 | INFO     | __main__:scrape:33 | Received scraping request for GSTIN: 06AAACG1840M2ZO
+2025-10-23 16:04:02 | INFO     | src.scraper:scrape_single_gstin:188 | 🔍 Scraping single GSTIN: 06AAACG1840M2ZO
+2025-10-23 16:04:02 | INFO     | src.scraper:generate_demo_data:285 | 🎭 Running in DEMO mode - generating sample data
+2025-10-23 16:04:02 | SUCCESS  | src.scraper:generate_demo_data:356 | ✅ Generated 5 demo records
+2025-10-23 16:04:02 | SUCCESS  | src.utils:save_to_csv:144 | ✅ Data saved to CSV: C:\Users\mahes\Downloads\docker_demo\docker-actions\data\gst_data_20251023_160402.csv
+2025-10-23 16:04:02 | INFO     | src.utils:save_to_csv:145 |    Records: 1, Size: 0.29 KB
+2025-10-23 16:04:02 | SUCCESS  | src.utils:save_to_json:174 | ✅ Data saved to JSON: C:\Users\mahes\Downloads\docker_demo\docker-actions\data\gst_data_20251023_160402.json
+2025-10-23 16:04:02 | INFO     | src.utils:save_to_json:175 |    Records: 1, Size: 0.42 KB
+2025-10-23 16:04:02 | SUCCESS  | __main__:scrape:41 | Successfully scraped GSTIN: 06AAACG1840M2ZO
+2025-10-23 16:23:08 | INFO     | src.scraper:__init__:46 | GST Scraper initialized
+2025-10-23 16:23:08 | INFO     | src.scraper:__init__:47 | Demo mode: True
+2025-10-23 16:23:08 | INFO     | src.scraper:__init__:48 | Max retries: 3
+2025-10-23 16:23:08 | INFO     | src.scraper:__init__:49 | Request timeout: 30s
+2025-10-23 16:23:58 | INFO     | __main__:scrape:33 | Received scraping request for GSTIN: 06AAACG1840M2ZO
+2025-10-23 16:23:58 | INFO     | src.scraper:scrape_single_gstin:188 | 🔍 Scraping single GSTIN: 06AAACG1840M2ZO
+2025-10-23 16:23:58 | INFO     | src.scraper:generate_demo_data:285 | 🎭 Running in DEMO mode - generating sample data
+2025-10-23 16:23:58 | SUCCESS  | src.scraper:generate_demo_data:356 | ✅ Generated 5 demo records
+2025-10-23 16:23:58 | SUCCESS  | src.utils:save_to_csv:144 | ✅ Data saved to CSV: C:\Users\mahes\Downloads\docker_demo\docker-actions\data\gst_data_20251023_162358.csv
+2025-10-23 16:23:58 | INFO     | src.utils:save_to_csv:145 |    Records: 1, Size: 0.29 KB
+2025-10-23 16:23:58 | SUCCESS  | src.utils:save_to_json:174 | ✅ Data saved to JSON: C:\Users\mahes\Downloads\docker_demo\docker-actions\data\gst_data_20251023_162358.json
+2025-10-23 16:23:58 | INFO     | src.utils:save_to_json:175 |    Records: 1, Size: 0.42 KB
+2025-10-23 16:23:58 | SUCCESS  | __main__:scrape:41 | Successfully scraped GSTIN: 06AAACG1840M2ZO
+2025-10-23 16:24:05 | INFO     | __main__:scrape:33 | Received scraping request for GSTIN: 06AAACG1840M2ZO
+2025-10-23 16:24:05 | INFO     | src.scraper:scrape_single_gstin:188 | 🔍 Scraping single GSTIN: 06AAACG1840M2ZO
+2025-10-23 16:24:05 | INFO     | src.scraper:generate_demo_data:285 | 🎭 Running in DEMO mode - generating sample data
+2025-10-23 16:24:05 | SUCCESS  | src.scraper:generate_demo_data:356 | ✅ Generated 5 demo records
+2025-10-23 16:24:05 | SUCCESS  | src.utils:save_to_csv:144 | ✅ Data saved to CSV: C:\Users\mahes\Downloads\docker_demo\docker-actions\data\gst_data_20251023_162405.csv
+2025-10-23 16:24:05 | INFO     | src.utils:save_to_csv:145 |    Records: 1, Size: 0.29 KB
+2025-10-23 16:24:05 | SUCCESS  | src.utils:save_to_json:174 | ✅ Data saved to JSON: C:\Users\mahes\Downloads\docker_demo\docker-actions\data\gst_data_20251023_162405.json
+2025-10-23 16:24:05 | INFO     | src.utils:save_to_json:175 |    Records: 1, Size: 0.42 KB
+2025-10-23 16:24:05 | SUCCESS  | __main__:scrape:41 | Successfully scraped GSTIN: 06AAACG1840M2ZO
+2025-10-23 16:25:20 | INFO     | src.scraper:__init__:46 | GST Scraper initialized
+2025-10-23 16:25:20 | INFO     | src.scraper:__init__:47 | Demo mode: True
+2025-10-23 16:25:20 | INFO     | src.scraper:__init__:48 | Max retries: 3
+2025-10-23 16:25:20 | INFO     | src.scraper:__init__:49 | Request timeout: 30s
+2025-10-23 16:25:29 | INFO     | __main__:scrape:33 | Received scraping request for GSTIN: 06AAACG1840M2ZO
+2025-10-23 16:25:29 | INFO     | src.scraper:scrape_single_gstin:188 | 🔍 Scraping single GSTIN: 06AAACG1840M2ZO
+2025-10-23 16:25:29 | INFO     | src.scraper:generate_demo_data:285 | 🎭 Running in DEMO mode - generating sample data
+2025-10-23 16:25:29 | SUCCESS  | src.scraper:generate_demo_data:356 | ✅ Generated 5 demo records
+2025-10-23 16:25:29 | SUCCESS  | src.utils:save_to_csv:144 | ✅ Data saved to CSV: C:\Users\mahes\Downloads\docker_demo\docker-actions\data\gst_data_20251023_162529.csv
+2025-10-23 16:25:29 | INFO     | src.utils:save_to_csv:145 |    Records: 1, Size: 0.29 KB
+2025-10-23 16:25:29 | SUCCESS  | src.utils:save_to_json:174 | ✅ Data saved to JSON: C:\Users\mahes\Downloads\docker_demo\docker-actions\data\gst_data_20251023_162529.json
+2025-10-23 16:25:29 | INFO     | src.utils:save_to_json:175 |    Records: 1, Size: 0.42 KB
+2025-10-23 16:25:29 | SUCCESS  | __main__:scrape:41 | Successfully scraped GSTIN: 06AAACG1840M2ZO

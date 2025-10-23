@@ -80,22 +80,33 @@ class GSTScraper:
                 # Check response status
                 response.raise_for_status()
                 
-                # Parse HTML (this is simplified - actual GST portal requires captcha solving)
+                # Parse HTML content
                 soup = BeautifulSoup(response.content, 'lxml')
-                
-                # Extract data
+
+                # Extract comprehensive data from GST portal
                 data = {
                     'gstin': gstin,
-                    'legal_name': self._extract_field(soup, 'legalName') or 'N/A',
-                    'trade_name': self._extract_field(soup, 'tradeName') or 'N/A',
-                    'registration_date': self._extract_field(soup, 'registrationDate') or 'N/A',
-                    'taxpayer_type': self._extract_field(soup, 'taxpayerType') or 'N/A',
-                    'status': self._extract_field(soup, 'status') or 'Active',
-                    'state': self._extract_field(soup, 'state') or 'N/A',
-                    'center_jurisdiction': self._extract_field(soup, 'centerJurisdiction') or 'N/A',
-                    'state_jurisdiction': self._extract_field(soup, 'stateJurisdiction') or 'N/A',
+                    'legal_name': self._extract_field(soup, 'legalName') or self._extract_text_by_label(soup, 'Legal Name of Business') or 'N/A',
+                    'trade_name': self._extract_field(soup, 'tradeName') or self._extract_text_by_label(soup, 'Trade Name') or 'N/A',
+                    'registration_date': self._extract_field(soup, 'registrationDate') or self._extract_text_by_label(soup, 'Effective Date of registration') or 'N/A',
+                    'constitution_of_business': self._extract_text_by_label(soup, 'Constitution of Business') or 'N/A',
+                    'gstin_status': self._extract_text_by_label(soup, 'GSTIN / UIN Status') or 'Active',
+                    'taxpayer_type': self._extract_text_by_label(soup, 'Taxpayer Type') or 'Regular',
+                    'state': self._extract_jurisdiction_info(soup, 'State') or 'N/A',
+                    'center_jurisdiction': self._extract_jurisdiction_info(soup, 'Center') or 'N/A',
+                    'state_jurisdiction': self._extract_jurisdiction_info(soup, 'State') or 'N/A',
+                    'principal_place_of_business': self._extract_text_by_label(soup, 'Principal Place of Business') or 'N/A',
+                    'aadhaar_authenticated': self._extract_text_by_label(soup, 'Whether Aadhaar Authenticated?') or 'N/A',
+                    'e_kyc_verified': self._extract_text_by_label(soup, 'Whether e-KYC Verified?') or 'N/A',
+                    'nature_of_core_business_activity': self._extract_text_by_label(soup, 'Nature Of Core Business Activity') or 'N/A',
+                    'nature_of_business_activities': self._extract_business_activities(soup) or [],
+                    'dealing_in_goods': self._extract_dealing_info(soup, 'Goods') or [],
+                    'dealing_in_services': self._extract_dealing_info(soup, 'Services') or [],
+                    'gstr3b_filing_details': self._extract_filing_details(soup, 'GSTR3B') or [],
+                    'gstr1_itr_filing_details': self._extract_filing_details(soup, 'GSTR-1/IFF') or [],
+                    'additional_trade_names': self._extract_additional_trade_names(soup) or [],
                     'scraped_at': get_timestamp('%Y-%m-%d %H:%M:%S'),
-                    'scraper_version': '1.0'
+                    'scraper_version': '2.0'
                 }
                 
                 logger.success(f"✅ Successfully scraped: {gstin}")
@@ -124,11 +135,11 @@ class GSTScraper:
     def _extract_field(self, soup, field_name):
         """
         Extract field value from HTML soup
-        
+
         Args:
             soup (BeautifulSoup): Parsed HTML
             field_name (str): Field identifier
-        
+
         Returns:
             str: Extracted value or None
         """
@@ -137,14 +148,230 @@ class GSTScraper:
             element = soup.find(id=field_name)
             if element:
                 return element.text.strip()
-            
+
             element = soup.find('span', {'class': field_name})
             if element:
                 return element.text.strip()
-            
+
             return None
         except Exception:
             return None
+
+    def _extract_text_by_label(self, soup, label_text):
+        """
+        Extract text following a specific label
+
+        Args:
+            soup (BeautifulSoup): Parsed HTML
+            label_text (str): Label text to search for
+
+        Returns:
+            str: Extracted text or None
+        """
+        try:
+            # Find the label element
+            label = soup.find(string=lambda text: text and label_text in text.strip())
+            if label:
+                # Get the next sibling or parent next sibling
+                parent = label.parent
+                if parent:
+                    # Look for the next element containing the value
+                    next_element = parent.find_next_sibling()
+                    if next_element:
+                        return next_element.get_text(strip=True)
+
+                    # Try finding text in the same parent
+                    text_parts = []
+                    for element in parent.next_siblings:
+                        if element.name and element.get_text(strip=True):
+                            text_parts.append(element.get_text(strip=True))
+                        elif isinstance(element, str) and element.strip():
+                            text_parts.append(element.strip())
+
+                    if text_parts:
+                        return ' '.join(text_parts)
+
+            # Alternative: find by pattern in text
+            for element in soup.find_all(text=True):
+                if label_text in element:
+                    parent = element.parent
+                    if parent:
+                        # Get all text after the label in the same container
+                        container = parent.parent if parent.parent else parent
+                        texts = container.find_all(text=True)
+                        label_index = None
+                        for i, text in enumerate(texts):
+                            if label_text in text:
+                                label_index = i
+                                break
+
+                        if label_index is not None and label_index + 1 < len(texts):
+                            return texts[label_index + 1].strip()
+
+            return None
+        except Exception:
+            return None
+
+    def _extract_jurisdiction_info(self, soup, jurisdiction_type):
+        """
+        Extract jurisdiction information
+
+        Args:
+            soup (BeautifulSoup): Parsed HTML
+            jurisdiction_type (str): 'Center' or 'State'
+
+        Returns:
+            str: Jurisdiction info or None
+        """
+        try:
+            # Look for jurisdiction headers
+            headers = soup.find_all(['h3', 'h4', 'strong', 'b'])
+            for header in headers:
+                header_text = header.get_text(strip=True)
+                if jurisdiction_type.upper() in header_text and 'JURISDICTION' in header_text:
+                    # Get the next elements
+                    container = header.parent
+                    info_parts = []
+
+                    # Find subsequent elements until next header
+                    current = header
+                    while current:
+                        current = current.find_next_sibling()
+                        if current and current.name in ['div', 'p', 'span']:
+                            text = current.get_text(strip=True)
+                            if text and not any(word in text.upper() for word in ['CENTER', 'STATE', 'JURISDICTION']):
+                                info_parts.append(text)
+                        elif current and current.name in ['h3', 'h4', 'strong', 'b']:
+                            break
+
+                    return ' '.join(info_parts) if info_parts else None
+
+            return None
+        except Exception:
+            return None
+
+    def _extract_business_activities(self, soup):
+        """
+        Extract nature of business activities
+
+        Args:
+            soup (BeautifulSoup): Parsed HTML
+
+        Returns:
+            list: List of business activities
+        """
+        try:
+            activities = []
+            # Look for the business activities section
+            section = soup.find(string=lambda text: text and 'Nature of Business Activities' in text)
+            if section:
+                container = section.parent.parent if section.parent else section.parent
+                list_items = container.find_all('li') if container else []
+
+                for item in list_items:
+                    text = item.get_text(strip=True)
+                    if text:
+                        activities.append(text)
+
+            return activities
+        except Exception:
+            return []
+
+    def _extract_dealing_info(self, soup, category):
+        """
+        Extract dealing in goods/services information
+
+        Args:
+            soup (BeautifulSoup): Parsed HTML
+            category (str): 'Goods' or 'Services'
+
+        Returns:
+            list: List of HSN/description pairs
+        """
+        try:
+            items = []
+            # Find the dealing section
+            section_header = soup.find(string=lambda text: text and f'Dealing In {category}' in text)
+            if section_header:
+                container = section_header.parent
+                # Find table or structured data
+                table = container.find_next('table')
+                if table:
+                    rows = table.find_all('tr')[1:]  # Skip header
+                    for row in rows:
+                        cols = row.find_all(['td', 'th'])
+                        if len(cols) >= 2:
+                            hsn = cols[0].get_text(strip=True)
+                            desc = cols[1].get_text(strip=True)
+                            if hsn and desc:
+                                items.append({'hsn': hsn, 'description': desc})
+
+            return items
+        except Exception:
+            return []
+
+    def _extract_filing_details(self, soup, filing_type):
+        """
+        Extract filing details for GSTR3B or GSTR-1/IFF
+
+        Args:
+            soup (BeautifulSoup): Parsed HTML
+            filing_type (str): 'GSTR3B' or 'GSTR-1/IFF'
+
+        Returns:
+            list: List of filing records
+        """
+        try:
+            filings = []
+            # Find the filing section
+            section_header = soup.find(string=lambda text: text and f'Filing details for {filing_type}' in text)
+            if section_header:
+                container = section_header.parent
+                table = container.find_next('table')
+                if table:
+                    rows = table.find_all('tr')[1:]  # Skip header
+                    for row in rows:
+                        cols = row.find_all(['td', 'th'])
+                        if len(cols) >= 3:
+                            financial_year = cols[0].get_text(strip=True)
+                            period = cols[1].get_text(strip=True)
+                            status = cols[2].get_text(strip=True)
+                            filings.append({
+                                'financial_year': financial_year,
+                                'period': period,
+                                'status': status
+                            })
+
+            return filings
+        except Exception:
+            return []
+
+    def _extract_additional_trade_names(self, soup):
+        """
+        Extract additional trade names
+
+        Args:
+            soup (BeautifulSoup): Parsed HTML
+
+        Returns:
+            list: List of additional trade names
+        """
+        try:
+            names = []
+            # Find additional trade names section
+            section = soup.find(string=lambda text: text and 'Additional Trade Name' in text)
+            if section:
+                container = section.parent
+                # Look for view link or list
+                view_link = container.find('a', string=lambda text: text and 'View' in text)
+                if view_link:
+                    # This would require JavaScript execution to get full list
+                    # For now, just indicate that additional names exist
+                    names.append("Additional trade names available (click View to see details)")
+
+            return names
+        except Exception:
+            return []
     
     def search_multiple_gstins(self, gstin_list):
         """
@@ -263,8 +490,8 @@ class GSTScraper:
 
         return {
             'gstin': gstin,
-            'legal_name': f'DEMO COMPANY {gstin[2:7]} PRIVATE LIMITED',
-            'trade_name': f'DEMO {gstin[2:7]}',
+            'legal_name': f'gstin[2:7]',
+            'trade_name': f'gstin[2:7]',
             'registration_date': '01/07/2017',
             'taxpayer_type': 'Regular',
             'status': 'Active',
