@@ -58,14 +58,11 @@ RUN pip install --upgrade pip && \
 COPY src/ ./src/
 COPY .env.example ./.env
 
-# Create data and logs directories with proper permissions
-RUN mkdir -p data logs && \
-    chown -R scraper:scraper /app && \
-    chmod -R 755 /app/data && \
-    chmod -R 755 /app/logs
-
 # Switch to non-root user for security
 USER scraper
+
+# Create data and logs directories with proper permissions
+RUN mkdir -p data logs
 
 # Create volume mount points (for data persistence)
 VOLUME ["/app/data", "/app/logs"]
