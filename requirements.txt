@@ -1,19 +1,24 @@
-# Web scraping libraries
+# Core web scraping libraries
 requests==2.31.0
-beautifulsoup4==4.12.2
-lxml==4.9.3
-selenium==4.15.2
+beautifulsoup4==4.12.3
+lxml==5.1.0
+selenium==4.16.0
 
-# Data handling
-pandas==2.1.3
+# Data manipulation
+pandas==2.1.4
 openpyxl==3.1.2
 
-# Utilities
+# Environment variables
 python-dotenv==1.0.0
+
+# User agent rotation
 fake-useragent==1.4.0
 
-# Logging
+# Enhanced logging
 loguru==0.7.2
 
-# Email notifications (optional)
-python-decouple==3.8
+# Date/time utilities
+python-dateutil==2.8.2
+
+# HTTP retry strategy
+urllib3==2.1.0

@@ -4,27 +4,57 @@ __pycache__/
 *$py.class
 *.so
 .Python
+.pyc
+.pyo
+*.egg
+*.egg-info/
+dist/
+build/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
 venv/
 env/
 ENV/
+virtualenv/
 
 # IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
+.DS_Store
+*.sublime-project
+*.sublime-workspace
 
-# Data and logs
-data/
-logs/
+# Data and logs (don't need in image)
+data/*.csv
+data/*.json
+logs/*.log
 
 # Git
 .git/
 .gitignore
+.github/
 
 # Docker
-Dockerfile
 docker-compose.yml
+docker-compose.override.yml
+Dockerfile
+.dockerignore
 
 # Environment
 .env
+.env.local
+.env.*.local
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Misc
+README.md
+LICENSE
+.editorconfig

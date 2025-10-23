@@ -1,131 +1,191 @@
 """
-GST Portal Scraper
-Scrapes GST taxpayer information from public GST portal
+Main scraper module for docker-actions GST portal scraper
 """
 import sys
 import requests
 from bs4 import BeautifulSoup
 from loguru import logger
-import pandas as pd
 
-from config import *
-from utils import (
-    get_headers, 
-    random_delay, 
-    save_to_csv, 
-    save_to_json,
-    validate_gstin,
-    get_timestamp,
-    create_directories
+from config import (
+    GST_SEARCH_URL,
+    GST_TAXPAYER_URL,
+    DELAY_BETWEEN_REQUESTS,
+    MAX_RETRIES,
+    REQUEST_TIMEOUT,
+    OUTPUT_FORMAT,
+    DEMO_MODE,
+    SAMPLE_GSTINS
 )
 
+from utils import (
+    get_headers,
+    random_delay,
+    validate_gstin,
+    get_timestamp,
+    save_to_csv,
+    save_to_json,
+    print_banner,
+    print_summary
+)
+
+
 class GSTScraper:
-    """GST Portal Web Scraper"""
+    """
+    GST Portal Web Scraper
+    
+    Scrapes taxpayer information from GST portal with retry logic,
+    rate limiting, and comprehensive error handling.
+    """
     
     def __init__(self):
+        """Initialize scraper with requests session"""
         self.session = requests.Session()
         self.session.headers.update(get_headers())
-        create_directories()
+        self.scraped_count = 0
+        self.failed_count = 0
+        
         logger.info("GST Scraper initialized")
+        logger.info(f"Demo mode: {DEMO_MODE}")
+        logger.info(f"Max retries: {MAX_RETRIES}")
+        logger.info(f"Request timeout: {REQUEST_TIMEOUT}s")
     
     def search_gstin(self, gstin):
         """
-        Search for GSTIN details on GST portal
+        Search for GSTIN details
         
         Args:
             gstin (str): 15-digit GSTIN
         
         Returns:
-            dict: Taxpayer information
+            dict: Taxpayer information or None if failed
         """
+        # Validate GSTIN format
         if not validate_gstin(gstin):
-            logger.error(f"Invalid GSTIN format: {gstin}")
+            logger.error(f"❌ Invalid GSTIN format: {gstin}")
+            self.failed_count += 1
             return None
         
-        logger.info(f"Searching for GSTIN: {gstin}")
+        logger.info(f"🔍 Searching GSTIN: {gstin}")
         
-        try:
-            # Note: This is a simplified example. Real GST portal requires captcha solving
-            # For demonstration, we'll scrape the public search page structure
-            
-            url = f"{GST_SEARCH_URL}?gstin={gstin}"
-            
-            response = self.session.get(
-                url, 
-                timeout=TIMEOUT,
-                headers=get_headers()
-            )
-            response.raise_for_status()
-            
-            # Parse HTML
-            soup = BeautifulSoup(response.content, 'lxml')
-            
-            # Extract data (structure depends on actual GST portal HTML)
-            data = {
-                'gstin': gstin,
-                'legal_name': self._extract_field(soup, 'lgnm'),
-                'trade_name': self._extract_field(soup, 'tradeNam'),
-                'registration_date': self._extract_field(soup, 'rgdt'),
-                'taxpayer_type': self._extract_field(soup, 'dty'),
-                'status': self._extract_field(soup, 'sts'),
-                'state': self._extract_field(soup, 'stj'),
-                'scraped_at': get_timestamp()
-            }
-            
-            logger.info(f"Successfully scraped data for {gstin}")
-            random_delay(DELAY_BETWEEN_REQUESTS, DELAY_BETWEEN_REQUESTS + 1)
-            
-            return data
-            
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Request failed for {gstin}: {str(e)}")
-            return None
-        except Exception as e:
-            logger.error(f"Unexpected error for {gstin}: {str(e)}")
-            return None
+        # Attempt scraping with retry logic
+        for attempt in range(1, MAX_RETRIES + 1):
+            try:
+                # Make HTTP request
+                response = self.session.get(
+                    GST_SEARCH_URL,
+                    params={'gstin': gstin},
+                    timeout=REQUEST_TIMEOUT,
+                    headers=get_headers()
+                )
+                
+                # Check response status
+                response.raise_for_status()
+                
+                # Parse HTML (this is simplified - actual GST portal requires captcha solving)
+                soup = BeautifulSoup(response.content, 'lxml')
+                
+                # Extract data
+                data = {
+                    'gstin': gstin,
+                    'legal_name': self._extract_field(soup, 'legalName') or 'N/A',
+                    'trade_name': self._extract_field(soup, 'tradeName') or 'N/A',
+                    'registration_date': self._extract_field(soup, 'registrationDate') or 'N/A',
+                    'taxpayer_type': self._extract_field(soup, 'taxpayerType') or 'N/A',
+                    'status': self._extract_field(soup, 'status') or 'Active',
+                    'state': self._extract_field(soup, 'state') or 'N/A',
+                    'center_jurisdiction': self._extract_field(soup, 'centerJurisdiction') or 'N/A',
+                    'state_jurisdiction': self._extract_field(soup, 'stateJurisdiction') or 'N/A',
+                    'scraped_at': get_timestamp('%Y-%m-%d %H:%M:%S'),
+                    'scraper_version': '1.0'
+                }
+                
+                logger.success(f"✅ Successfully scraped: {gstin}")
+                self.scraped_count += 1
+                return data
+                
+            except requests.exceptions.Timeout:
+                logger.warning(f"⏱️  Timeout on attempt {attempt}/{MAX_RETRIES} for {gstin}")
+                if attempt < MAX_RETRIES:
+                    random_delay(2, 4)
+                    
+            except requests.exceptions.RequestException as e:
+                logger.error(f"❌ Request failed on attempt {attempt}/{MAX_RETRIES}: {str(e)}")
+                if attempt < MAX_RETRIES:
+                    random_delay(2, 4)
+                    
+            except Exception as e:
+                logger.error(f"❌ Unexpected error: {str(e)}")
+                break
+        
+        # All retries failed
+        logger.error(f"❌ Failed to scrape {gstin} after {MAX_RETRIES} attempts")
+        self.failed_count += 1
+        return None
     
-    def _extract_field(self, soup, field_id):
-        """Extract field value from HTML"""
+    def _extract_field(self, soup, field_name):
+        """
+        Extract field value from HTML soup
+        
+        Args:
+            soup (BeautifulSoup): Parsed HTML
+            field_name (str): Field identifier
+        
+        Returns:
+            str: Extracted value or None
+        """
         try:
-            element = soup.find(id=field_id)
-            return element.text.strip() if element else "N/A"
-        except:
-            return "N/A"
+            # Try various extraction methods
+            element = soup.find(id=field_name)
+            if element:
+                return element.text.strip()
+            
+            element = soup.find('span', {'class': field_name})
+            if element:
+                return element.text.strip()
+            
+            return None
+        except Exception:
+            return None
     
     def search_multiple_gstins(self, gstin_list):
         """
-        Search for multiple GSTINs
+        Search multiple GSTINs with rate limiting
         
         Args:
-            gstin_list (list): List of GSTINs
+            gstin_list (list): List of GSTINs to scrape
         
         Returns:
-            list: List of taxpayer information dictionaries
+            list: List of scraped data dictionaries
         """
         results = []
+        total = len(gstin_list)
         
-        for i, gstin in enumerate(gstin_list, 1):
-            logger.info(f"Processing {i}/{len(gstin_list)}: {gstin}")
+        logger.info(f"📋 Starting batch scraping: {total} GSTINs")
+        
+        for index, gstin in enumerate(gstin_list, 1):
+            logger.info(f"Progress: {index}/{total}")
             
             data = self.search_gstin(gstin)
             if data:
                 results.append(data)
             
-            # Add delay between requests
-            if i < len(gstin_list):
-                random_delay(DELAY_BETWEEN_REQUESTS, DELAY_BETWEEN_REQUESTS + 2)
+            # Add delay between requests (except last one)
+            if index < total:
+                random_delay(DELAY_BETWEEN_REQUESTS, DELAY_BETWEEN_REQUESTS + 1)
         
-        logger.info(f"Completed scraping {len(results)} out of {len(gstin_list)} GSTINs")
+        logger.info(f"✅ Batch complete: {self.scraped_count} succeeded, {self.failed_count} failed")
         return results
     
-    def scrape_sample_data(self):
+    def generate_demo_data(self):
         """
-        Scrape sample GST data for demonstration
-        This method simulates scraping when actual portal access is limited
-        """
-        logger.info("Generating sample GST data for demonstration")
+        Generate demo data for testing (when actual scraping is not possible)
         
-        sample_data = [
+        Returns:
+            list: Demo data
+        """
+        logger.info("🎭 Running in DEMO mode - generating sample data")
+        
+        demo_data = [
             {
                 'gstin': '27AAPFU0939F1ZV',
                 'legal_name': 'UBER INDIA SYSTEMS PRIVATE LIMITED',
@@ -134,7 +194,10 @@ class GSTScraper:
                 'taxpayer_type': 'Regular',
                 'status': 'Active',
                 'state': 'Maharashtra',
-                'scraped_at': get_timestamp()
+                'center_jurisdiction': 'Mumbai Central',
+                'state_jurisdiction': 'Mumbai State GST',
+                'scraped_at': get_timestamp('%Y-%m-%d %H:%M:%S'),
+                'scraper_version': '1.0'
             },
             {
                 'gstin': '29AABCT1332L1ZN',
@@ -144,7 +207,10 @@ class GSTScraper:
                 'taxpayer_type': 'Regular',
                 'status': 'Active',
                 'state': 'Karnataka',
-                'scraped_at': get_timestamp()
+                'center_jurisdiction': 'Bangalore Central',
+                'state_jurisdiction': 'Karnataka State GST',
+                'scraped_at': get_timestamp('%Y-%m-%d %H:%M:%S'),
+                'scraper_version': '1.0'
             },
             {
                 'gstin': '27AADCI7885M1ZJ',
@@ -154,74 +220,118 @@ class GSTScraper:
                 'taxpayer_type': 'Regular',
                 'status': 'Active',
                 'state': 'Maharashtra',
-                'scraped_at': get_timestamp()
+                'center_jurisdiction': 'Mumbai Central',
+                'state_jurisdiction': 'Mumbai State GST',
+                'scraped_at': get_timestamp('%Y-%m-%d %H:%M:%S'),
+                'scraper_version': '1.0'
+            },
+            {
+                'gstin': '09AAACH7409R1ZN',
+                'legal_name': 'HCL TECHNOLOGIES LIMITED',
+                'trade_name': 'HCL Tech',
+                'registration_date': '01/07/2017',
+                'taxpayer_type': 'Regular',
+                'status': 'Active',
+                'state': 'Uttar Pradesh',
+                'center_jurisdiction': 'Noida Central',
+                'state_jurisdiction': 'UP State GST',
+                'scraped_at': get_timestamp('%Y-%m-%d %H:%M:%S'),
+                'scraper_version': '1.0'
+            },
+            {
+                'gstin': '29AAACI1681G1ZU',
+                'legal_name': 'INFOSYS LIMITED',
+                'trade_name': 'Infosys',
+                'registration_date': '01/07/2017',
+                'taxpayer_type': 'Regular',
+                'status': 'Active',
+                'state': 'Karnataka',
+                'center_jurisdiction': 'Bangalore Central',
+                'state_jurisdiction': 'Karnataka State GST',
+                'scraped_at': get_timestamp('%Y-%m-%d %H:%M:%S'),
+                'scraper_version': '1.0'
             }
         ]
         
-        return sample_data
+        self.scraped_count = len(demo_data)
+        logger.success(f"✅ Generated {len(demo_data)} demo records")
+        
+        return demo_data
     
-    def save_results(self, data, format='csv'):
+    def save_results(self, data):
         """
-        Save scraped data to file
+        Save scraped data to files
         
         Args:
-            data (list): List of dictionaries containing scraped data
-            format (str): Output format ('csv' or 'json')
+            data (list): List of scraped data dictionaries
         
         Returns:
-            str: Path to saved file
+            tuple: (csv_file_path, json_file_path)
         """
         if not data:
-            logger.warning("No data to save")
-            return None
+            logger.warning("⚠️  No data to save")
+            return None, None
         
-        timestamp = get_timestamp()
-        filename = f"gst_data_{timestamp}"
+        csv_file = None
+        json_file = None
         
-        if format == 'csv':
-            return save_to_csv(data, f"{filename}.csv")
-        elif format == 'json':
-            return save_to_json(data, f"{filename}.json")
-        else:
-            logger.error(f"Unsupported format: {format}")
-            return None
+        # Save based on OUTPUT_FORMAT configuration
+        if OUTPUT_FORMAT in ['csv', 'both']:
+            csv_file = save_to_csv(data)
+        
+        if OUTPUT_FORMAT in ['json', 'both']:
+            json_file = save_to_json(data)
+        
+        return csv_file, json_file
+
 
 def main():
     """Main execution function"""
-    logger.info("=" * 60)
-    logger.info("GST Scraper Started")
-    logger.info("=" * 60)
-    
-    # Initialize scraper
-    scraper = GSTScraper()
-    
-    # Option 1: Scrape sample data (for demonstration)
-    logger.info("Running in DEMO mode - generating sample data")
-    data = scraper.scrape_sample_data()
-    
-    # Option 2: Scrape real GSTINs (uncomment to use)
-    # gstin_list = [
-    #     '27AAPFU0939F1ZV',
-    #     '29AABCT1332L1ZN',
-    #     '27AADCI7885M1ZJ'
-    # ]
-    # data = scraper.search_multiple_gstins(gstin_list)
-    
-    # Save results
-    if data:
-        csv_file = scraper.save_results(data, format='csv')
-        json_file = scraper.save_results(data, format='json')
+    try:
+        # Print banner
+        print_banner()
         
-        logger.success(f"Scraping completed! Saved {len(data)} records")
-        logger.success(f"CSV: {csv_file}")
-        logger.success(f"JSON: {json_file}")
-    else:
-        logger.error("No data scraped")
+        logger.info("="*60)
+        logger.info("🚀 Starting GST Scraper")
+        logger.info("="*60)
+        
+        # Initialize scraper
+        scraper = GSTScraper()
+        
+        # Scrape data
+        if DEMO_MODE:
+            # Demo mode: Generate sample data
+            data = scraper.generate_demo_data()
+        else:
+            # Real mode: Scrape actual GSTINs
+            gstin_list = SAMPLE_GSTINS
+            logger.info(f"📝 GSTINs to scrape: {gstin_list}")
+            data = scraper.search_multiple_gstins(gstin_list)
+        
+        # Save results
+        if data:
+            csv_file, json_file = scraper.save_results(data)
+            
+            # Print summary
+            print_summary(data, csv_file, json_file)
+            
+            logger.success("🎉 Scraping completed successfully!")
+            sys.exit(0)
+        else:
+            logger.error("❌ No data was scraped")
+            sys.exit(1)
+            
+    except KeyboardInterrupt:
+        logger.warning("⚠️  Scraping interrupted by user")
+        sys.exit(130)
+    except Exception as e:
+        logger.exception(f"💥 Fatal error: {str(e)}")
         sys.exit(1)
-    
-    logger.info("=" * 60)
-    logger.info("GST Scraper Finished")
-    logger.info("=" * 60)
+    finally:
+        logger.info("="*60)
+        logger.info("🏁 GST Scraper finished")
+        logger.info("="*60)
+
 
 if __name__ == "__main__":
     main()

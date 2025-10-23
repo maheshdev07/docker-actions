@@ -1,0 +1,17 @@
+2025-10-23 09:42:49 | INFO     | __main__:main:294 | ============================================================
+2025-10-23 09:42:49 | INFO     | __main__:main:295 | 🚀 Starting GST Scraper
+2025-10-23 09:42:49 | INFO     | __main__:main:296 | ============================================================
+2025-10-23 09:42:49 | INFO     | __main__:__init__:47 | GST Scraper initialized
+2025-10-23 09:42:49 | INFO     | __main__:__init__:48 | Demo mode: True
+2025-10-23 09:42:49 | INFO     | __main__:__init__:49 | Max retries: 3
+2025-10-23 09:42:49 | INFO     | __main__:__init__:50 | Request timeout: 30s
+2025-10-23 09:42:49 | INFO     | __main__:generate_demo_data:186 | 🎭 Running in DEMO mode - generating sample data
+2025-10-23 09:42:49 | SUCCESS  | __main__:generate_demo_data:257 | ✅ Generated 5 demo records
+2025-10-23 09:42:49 | SUCCESS  | utils:save_to_csv:142 | ✅ Data saved to CSV: C:\Users\mahes\Downloads\docker_demo\docker-actions\data\gst_data_20251023_094249.csv
+2025-10-23 09:42:49 | INFO     | utils:save_to_csv:143 |    Records: 5, Size: 0.86 KB
+2025-10-23 09:42:49 | SUCCESS  | utils:save_to_json:172 | ✅ Data saved to JSON: C:\Users\mahes\Downloads\docker_demo\docker-actions\data\gst_data_20251023_094249.json
+2025-10-23 09:42:49 | INFO     | utils:save_to_json:173 |    Records: 5, Size: 2.04 KB
+2025-10-23 09:42:49 | SUCCESS  | __main__:main:318 | 🎉 Scraping completed successfully!
+2025-10-23 09:42:49 | INFO     | __main__:main:331 | ============================================================
+2025-10-23 09:42:49 | INFO     | __main__:main:332 | 🏁 GST Scraper finished
+2025-10-23 09:42:49 | INFO     | __main__:main:333 | ============================================================
