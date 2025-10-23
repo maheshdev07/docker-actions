@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from loguru import logger
 
-from config import (
+from src.config import (
     GST_SEARCH_URL,
     GST_TAXPAYER_URL,
     DELAY_BETWEEN_REQUESTS,
@@ -16,7 +16,7 @@ from config import (
     SAMPLE_GSTINS
 )
 
-from utils import (
+from src.utils import (
     get_headers,
     random_delay,
     validate_gstin,
@@ -187,17 +187,94 @@ class GSTScraper:
         """
         logger.info(f"🔍 Scraping single GSTIN: {gstin}")
 
+        # Validate GSTIN first
+        if not validate_gstin(gstin):
+            logger.error(f"❌ Invalid GSTIN format: {gstin}")
+            return None
+
         if DEMO_MODE:
             # Return demo data for the GSTIN
             demo_data = self.generate_demo_data()
             for item in demo_data:
                 if item['gstin'] == gstin:
                     return item
-            # If GSTIN not in demo data, return first demo item as template
-            return demo_data[0] if demo_data else None
+            # If GSTIN not in demo data, return a generated demo item for the GSTIN
+            return self._generate_demo_for_gstin(gstin)
         else:
             return self.search_gstin(gstin)
-    
+
+    def _generate_demo_for_gstin(self, gstin):
+        """
+        Generate demo data for a specific GSTIN
+
+        Args:
+            gstin (str): GSTIN to generate demo data for
+
+        Returns:
+            dict: Demo data for the GSTIN
+        """
+        from src.utils import get_timestamp
+
+        # Extract state code from GSTIN (first 2 digits)
+        state_code = gstin[:2]
+
+        # Map state codes to state names (simplified)
+        state_map = {
+            '01': 'Jammu and Kashmir',
+            '02': 'Himachal Pradesh',
+            '03': 'Punjab',
+            '04': 'Chandigarh',
+            '05': 'Uttarakhand',
+            '06': 'Haryana',
+            '07': 'Delhi',
+            '08': 'Rajasthan',
+            '09': 'Uttar Pradesh',
+            '10': 'Bihar',
+            '11': 'Sikkim',
+            '12': 'Arunachal Pradesh',
+            '13': 'Nagaland',
+            '14': 'Manipur',
+            '15': 'Mizoram',
+            '16': 'Tripura',
+            '17': 'Meghalaya',
+            '18': 'Assam',
+            '19': 'West Bengal',
+            '20': 'Jharkhand',
+            '21': 'Odisha',
+            '22': 'Chhattisgarh',
+            '23': 'Madhya Pradesh',
+            '24': 'Gujarat',
+            '25': 'Daman and Diu',
+            '26': 'Dadra and Nagar Haveli',
+            '27': 'Maharashtra',
+            '28': 'Andhra Pradesh',
+            '29': 'Karnataka',
+            '30': 'Goa',
+            '31': 'Lakshadweep',
+            '32': 'Kerala',
+            '33': 'Tamil Nadu',
+            '34': 'Puducherry',
+            '35': 'Andaman and Nicobar Islands',
+            '36': 'Telangana',
+            '37': 'Andhra Pradesh (New)',
+        }
+
+        state_name = state_map.get(state_code, 'Unknown State')
+
+        return {
+            'gstin': gstin,
+            'legal_name': f'DEMO COMPANY {gstin[2:7]} PRIVATE LIMITED',
+            'trade_name': f'DEMO {gstin[2:7]}',
+            'registration_date': '01/07/2017',
+            'taxpayer_type': 'Regular',
+            'status': 'Active',
+            'state': state_name,
+            'center_jurisdiction': f'{state_name.split()[0]} Central',
+            'state_jurisdiction': f'{state_name} State GST',
+            'scraped_at': get_timestamp('%Y-%m-%d %H:%M:%S'),
+            'scraper_version': '1.0'
+        }
+
     def generate_demo_data(self):
         """
         Generate demo data for testing (when actual scraping is not possible)

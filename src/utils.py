@@ -11,7 +11,7 @@ import pandas as pd
 from loguru import logger
 from fake_useragent import UserAgent
 
-from config import (
+from src.config import (
     DATA_DIR,
     LOGS_DIR,
     LOG_LEVEL,
@@ -84,25 +84,27 @@ def random_delay(min_seconds=1, max_seconds=3):
 def validate_gstin(gstin):
     """
     Validate GSTIN format
-    
-    Format: 2 digits + 10 alphanumeric + 1 alphabet + 1 digit + 1 alphabet
+
+    Format: 2 digits + 5 letters + 4 digits + 1 letter + 1 alphanumeric + 1 alphanumeric
     Example: 27AAPFU0939F1ZV
-    
+
     Args:
         gstin (str): GSTIN to validate
-    
+
     Returns:
         bool: True if valid, False otherwise
     """
     if not gstin or not isinstance(gstin, str):
         return False
-    
+
     if len(gstin) != 15:
         return False
-    
+
     import re
-    pattern = r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[Z]{1}[0-9A-Z]{1}$'
-    return bool(re.match(pattern, gstin.upper()))
+    # Standard GSTIN pattern: 2 digits + 5 letters + 4 digits + 1 letter + 3 alphanumeric
+    # GSTIN is 15 characters: XXAAAAA9999A999 where X=digit, A=letter, 9=alphanum
+    pattern = r'^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9A-Z]{3}$'
+    return bool(re.fullmatch(pattern, gstin.upper()))
 
 def get_timestamp(format_str="%Y%m%d_%H%M%S"):
     """
