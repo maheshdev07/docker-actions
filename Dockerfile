@@ -58,6 +58,11 @@ RUN pip install --upgrade pip && \
 COPY src/ ./src/
 COPY .env.example ./.env
 
+# Create data and logs directories with proper permissions
+RUN mkdir -p data logs && \
+    chown -R scraper:scraper /app/data && \
+    chown -R scraper:scraper /app/logs
+
 # Create volume mount points (for data persistence)
 VOLUME ["/app/data", "/app/logs"]
 
