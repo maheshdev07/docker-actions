@@ -4,11 +4,13 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: gst-scraper-container
+    ports:
+      - "5000:5000"
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
     environment:
       - DEMO_MODE=true
       - DEBUG=true
+      - FLASK_ENV=development
     restart: unless-stopped
-    command: ["python", "src/scraper.py"]

@@ -22,3 +22,7 @@ python-dateutil==2.8.2
 
 # HTTP retry strategy
 urllib3==2.1.0
+
+# Web framework
+Flask==3.0.0
+flask-cors==4.0.0

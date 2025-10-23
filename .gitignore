@@ -65,6 +65,9 @@ db.sqlite3-journal
 instance/
 .webassets-cache
 
+# Flask templates (if not committed)
+# templates/
+
 # Scrapy stuff:
 .scrapy
 

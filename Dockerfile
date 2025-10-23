@@ -56,6 +56,8 @@ RUN pip install --upgrade pip && \
 
 # Copy application source code
 COPY src/ ./src/
+COPY app.py .
+COPY templates/ ./templates/
 COPY .env.example ./.env
 
 # Create data and logs directories with proper permissions
@@ -69,9 +71,12 @@ VOLUME ["/app/data", "/app/logs"]
 # Switch to non-root user for security
 USER scraper
 
+# Expose port for Flask app
+EXPOSE 5000
+
 # Health check (optional)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import src.scraper; print('healthy')" || exit 1
+    CMD python -c "import requests; requests.get('http://localhost:5000/health')" || exit 1
 
-# Default command to run scraper
-CMD ["python", "src/scraper.py"]
+# Default command to run Flask app
+CMD ["python", "app.py"]

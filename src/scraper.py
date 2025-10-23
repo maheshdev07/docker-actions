@@ -11,8 +11,7 @@ from config import (
     GST_TAXPAYER_URL,
     DELAY_BETWEEN_REQUESTS,
     MAX_RETRIES,
-    REQUEST_TIMEOUT,
-    OUTPUT_FORMAT,
+    REQUEST_TIMEOUT,  OUTPUT_FORMAT,
     DEMO_MODE,
     SAMPLE_GSTINS
 )
@@ -150,31 +149,54 @@ class GSTScraper:
     def search_multiple_gstins(self, gstin_list):
         """
         Search multiple GSTINs with rate limiting
-        
+
         Args:
             gstin_list (list): List of GSTINs to scrape
-        
+
         Returns:
             list: List of scraped data dictionaries
         """
         results = []
         total = len(gstin_list)
-        
+
         logger.info(f"📋 Starting batch scraping: {total} GSTINs")
-        
+
         for index, gstin in enumerate(gstin_list, 1):
             logger.info(f"Progress: {index}/{total}")
-            
+
             data = self.search_gstin(gstin)
             if data:
                 results.append(data)
-            
+
             # Add delay between requests (except last one)
             if index < total:
                 random_delay(DELAY_BETWEEN_REQUESTS, DELAY_BETWEEN_REQUESTS + 1)
-        
+
         logger.info(f"✅ Batch complete: {self.scraped_count} succeeded, {self.failed_count} failed")
         return results
+
+    def scrape_single_gstin(self, gstin):
+        """
+        Scrape a single GSTIN and return the data
+
+        Args:
+            gstin (str): GSTIN to scrape
+
+        Returns:
+            dict: Scraped data or None if failed
+        """
+        logger.info(f"🔍 Scraping single GSTIN: {gstin}")
+
+        if DEMO_MODE:
+            # Return demo data for the GSTIN
+            demo_data = self.generate_demo_data()
+            for item in demo_data:
+                if item['gstin'] == gstin:
+                    return item
+            # If GSTIN not in demo data, return first demo item as template
+            return demo_data[0] if demo_data else None
+        else:
+            return self.search_gstin(gstin)
     
     def generate_demo_data(self):
         """
