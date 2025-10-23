@@ -82,16 +82,16 @@ jobs:
         with:
           context: .
           push: false
-          tags: ${{ env.DOCKER_IMAGE }}:test
+          tags: gst-scraper:test
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      
+
       - name: Test Docker image
         run: |
           docker run --rm \
             -v $(pwd)/data:/app/data \
             -v $(pwd)/logs:/app/logs \
-            ${{ env.DOCKER_IMAGE }}:test
+            gst-scraper:test
       
       - name: Upload scraping results
         uses: actions/upload-artifact@v4
