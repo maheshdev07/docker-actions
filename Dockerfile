@@ -34,7 +34,8 @@ FROM python:3.11-slim
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PATH="/app:$PATH"
+    PATH="/app:$PATH" \
+    PYTHONPATH="/app:$PYTHONPATH"
 
 # Set working directory
 WORKDIR /app
@@ -72,4 +73,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import src.scraper; print('healthy')" || exit 1
 
 # Default command to run scraper
-CMD ["python", "-m", "src.scraper"]
+CMD ["python", "src/scraper.py"]
