@@ -200,6 +200,7 @@ jobs:
       
       - name: Build and push
         uses: docker/build-push-action@v5
+        if: steps.check-secrets.outputs.secrets_available == 'true'
         with:
           context: .
           push: true
@@ -207,9 +208,10 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:latest
             ${{ env.DOCKER_IMAGE }}:${{ github.run_number }}
           cache-from: type=gha
-      
+
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v3
+        if: steps.check-secrets.outputs.secrets_available == 'true'
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
