@@ -207,7 +207,6 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:latest
             ${{ env.DOCKER_IMAGE }}:${{ github.run_number }}
           cache-from: type=gha
-          cache-to: type=gha,mode=max
       
       - name: Docker Hub Description
         uses: peter-evans/dockerhub-description@v3
