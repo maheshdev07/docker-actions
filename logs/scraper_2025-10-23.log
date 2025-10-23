@@ -1788,3 +1788,11 @@
 2025-10-23 15:41:17 | INFO     | src.scraper:__init__:47 | Demo mode: True
 2025-10-23 15:41:17 | INFO     | src.scraper:__init__:48 | Max retries: 3
 2025-10-23 15:41:17 | INFO     | src.scraper:__init__:49 | Request timeout: 30s
+2025-10-23 15:58:42 | INFO     | src.scraper:__init__:46 | GST Scraper initialized
+2025-10-23 15:58:42 | INFO     | src.scraper:__init__:47 | Demo mode: True
+2025-10-23 15:58:42 | INFO     | src.scraper:__init__:48 | Max retries: 3
+2025-10-23 15:58:42 | INFO     | src.scraper:__init__:49 | Request timeout: 30s
+2025-10-23 16:00:36 | INFO     | src.scraper:__init__:46 | GST Scraper initialized
+2025-10-23 16:00:36 | INFO     | src.scraper:__init__:47 | Demo mode: True
+2025-10-23 16:00:36 | INFO     | src.scraper:__init__:48 | Max retries: 3
+2025-10-23 16:00:36 | INFO     | src.scraper:__init__:49 | Request timeout: 30s
