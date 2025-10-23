@@ -19,7 +19,7 @@ on:
 
 # Environment variables
 env:
-  DOCKER_IMAGE: ${{ secrets.DOCKERHUB_USERNAME || 'maheshdev07' }}/gst-scraper
+  DOCKER_IMAGE: mahesha007/scraper
   PYTHON_VERSION: '3.11'
 
 jobs:
