@@ -89,6 +89,8 @@ jobs:
 
       - name: Test Docker image
         run: |
+          mkdir -p data logs
+          chmod -R 777 data logs
           docker run --rm \
             -v $(pwd)/data:/app/data \
             -v $(pwd)/logs:/app/logs \
