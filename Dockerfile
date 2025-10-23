@@ -58,14 +58,11 @@ RUN pip install --upgrade pip && \
 COPY src/ ./src/
 COPY .env.example ./.env
 
-# Switch to non-root user for security
-USER scraper
-
-# Create data and logs directories with proper permissions
-RUN mkdir -p data logs
-
 # Create volume mount points (for data persistence)
 VOLUME ["/app/data", "/app/logs"]
+
+# Switch to non-root user for security
+USER scraper
 
 # Health check (optional)
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
