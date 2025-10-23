@@ -94,7 +94,7 @@ jobs:
             ${{ env.DOCKER_IMAGE }}:test
       
       - name: Upload scraping results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: gst-data
           path: |
@@ -144,7 +144,7 @@ jobs:
           tail -50 logs/*.log || echo "No log files"
       
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: gst-scraper-results-${{ github.run_number }}
           path: |
