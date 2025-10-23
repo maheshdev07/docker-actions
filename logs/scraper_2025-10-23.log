@@ -100,3 +100,88 @@
 2025-10-23 06:33:06 | INFO     | __main__:main:331 | ============================================================
 2025-10-23 06:33:06 | INFO     | __main__:main:332 | 🏁 GST Scraper finished
 2025-10-23 06:33:06 | INFO     | __main__:main:333 | ============================================================
+2025-10-23 06:34:08 | INFO     | __main__:main:294 | ============================================================
+2025-10-23 06:34:08 | INFO     | __main__:main:295 | 🚀 Starting GST Scraper
+2025-10-23 06:34:08 | INFO     | __main__:main:296 | ============================================================
+2025-10-23 06:34:08 | INFO     | __main__:__init__:47 | GST Scraper initialized
+2025-10-23 06:34:08 | INFO     | __main__:__init__:48 | Demo mode: True
+2025-10-23 06:34:08 | INFO     | __main__:__init__:49 | Max retries: 3
+2025-10-23 06:34:08 | INFO     | __main__:__init__:50 | Request timeout: 30s
+2025-10-23 06:34:08 | INFO     | __main__:generate_demo_data:186 | 🎭 Running in DEMO mode - generating sample data
+2025-10-23 06:34:08 | SUCCESS  | __main__:generate_demo_data:257 | ✅ Generated 5 demo records
+2025-10-23 06:34:08 | SUCCESS  | utils:save_to_csv:142 | ✅ Data saved to CSV: /app/data/gst_data_20251023_063408.csv
+2025-10-23 06:34:08 | INFO     | utils:save_to_csv:143 |    Records: 5, Size: 0.85 KB
+2025-10-23 06:34:08 | SUCCESS  | utils:save_to_json:172 | ✅ Data saved to JSON: /app/data/gst_data_20251023_063408.json
+2025-10-23 06:34:08 | INFO     | utils:save_to_json:173 |    Records: 5, Size: 1.97 KB
+2025-10-23 06:34:08 | SUCCESS  | __main__:main:318 | 🎉 Scraping completed successfully!
+2025-10-23 06:34:08 | INFO     | __main__:main:331 | ============================================================
+2025-10-23 06:34:08 | INFO     | __main__:main:332 | 🏁 GST Scraper finished
+2025-10-23 06:34:08 | INFO     | __main__:main:333 | ============================================================
+2025-10-23 06:35:11 | INFO     | __main__:main:294 | ============================================================
+2025-10-23 06:35:11 | INFO     | __main__:main:295 | 🚀 Starting GST Scraper
+2025-10-23 06:35:11 | INFO     | __main__:main:296 | ============================================================
+2025-10-23 06:35:11 | INFO     | __main__:__init__:47 | GST Scraper initialized
+2025-10-23 06:35:11 | INFO     | __main__:__init__:48 | Demo mode: True
+2025-10-23 06:35:11 | INFO     | __main__:__init__:49 | Max retries: 3
+2025-10-23 06:35:11 | INFO     | __main__:__init__:50 | Request timeout: 30s
+2025-10-23 06:35:11 | INFO     | __main__:generate_demo_data:186 | 🎭 Running in DEMO mode - generating sample data
+2025-10-23 06:35:11 | SUCCESS  | __main__:generate_demo_data:257 | ✅ Generated 5 demo records
+2025-10-23 06:35:12 | SUCCESS  | utils:save_to_csv:142 | ✅ Data saved to CSV: /app/data/gst_data_20251023_063511.csv
+2025-10-23 06:35:12 | INFO     | utils:save_to_csv:143 |    Records: 5, Size: 0.85 KB
+2025-10-23 06:35:12 | SUCCESS  | utils:save_to_json:172 | ✅ Data saved to JSON: /app/data/gst_data_20251023_063512.json
+2025-10-23 06:35:12 | INFO     | utils:save_to_json:173 |    Records: 5, Size: 1.97 KB
+2025-10-23 06:35:12 | SUCCESS  | __main__:main:318 | 🎉 Scraping completed successfully!
+2025-10-23 06:35:12 | INFO     | __main__:main:331 | ============================================================
+2025-10-23 06:35:12 | INFO     | __main__:main:332 | 🏁 GST Scraper finished
+2025-10-23 06:35:12 | INFO     | __main__:main:333 | ============================================================
+2025-10-23 06:36:15 | INFO     | __main__:main:294 | ============================================================
+2025-10-23 06:36:15 | INFO     | __main__:main:295 | 🚀 Starting GST Scraper
+2025-10-23 06:36:15 | INFO     | __main__:main:296 | ============================================================
+2025-10-23 06:36:15 | INFO     | __main__:__init__:47 | GST Scraper initialized
+2025-10-23 06:36:15 | INFO     | __main__:__init__:48 | Demo mode: True
+2025-10-23 06:36:15 | INFO     | __main__:__init__:49 | Max retries: 3
+2025-10-23 06:36:15 | INFO     | __main__:__init__:50 | Request timeout: 30s
+2025-10-23 06:36:15 | INFO     | __main__:generate_demo_data:186 | 🎭 Running in DEMO mode - generating sample data
+2025-10-23 06:36:15 | SUCCESS  | __main__:generate_demo_data:257 | ✅ Generated 5 demo records
+2025-10-23 06:36:15 | SUCCESS  | utils:save_to_csv:142 | ✅ Data saved to CSV: /app/data/gst_data_20251023_063615.csv
+2025-10-23 06:36:15 | INFO     | utils:save_to_csv:143 |    Records: 5, Size: 0.85 KB
+2025-10-23 06:36:15 | SUCCESS  | utils:save_to_json:172 | ✅ Data saved to JSON: /app/data/gst_data_20251023_063615.json
+2025-10-23 06:36:15 | INFO     | utils:save_to_json:173 |    Records: 5, Size: 1.97 KB
+2025-10-23 06:36:15 | SUCCESS  | __main__:main:318 | 🎉 Scraping completed successfully!
+2025-10-23 06:36:15 | INFO     | __main__:main:331 | ============================================================
+2025-10-23 06:36:15 | INFO     | __main__:main:332 | 🏁 GST Scraper finished
+2025-10-23 06:36:15 | INFO     | __main__:main:333 | ============================================================
+2025-10-23 06:37:17 | INFO     | __main__:main:294 | ============================================================
+2025-10-23 06:37:17 | INFO     | __main__:main:295 | 🚀 Starting GST Scraper
+2025-10-23 06:37:17 | INFO     | __main__:main:296 | ============================================================
+2025-10-23 06:37:17 | INFO     | __main__:__init__:47 | GST Scraper initialized
+2025-10-23 06:37:17 | INFO     | __main__:__init__:48 | Demo mode: True
+2025-10-23 06:37:17 | INFO     | __main__:__init__:49 | Max retries: 3
+2025-10-23 06:37:17 | INFO     | __main__:__init__:50 | Request timeout: 30s
+2025-10-23 06:37:17 | INFO     | __main__:generate_demo_data:186 | 🎭 Running in DEMO mode - generating sample data
+2025-10-23 06:37:17 | SUCCESS  | __main__:generate_demo_data:257 | ✅ Generated 5 demo records
+2025-10-23 06:37:17 | SUCCESS  | utils:save_to_csv:142 | ✅ Data saved to CSV: /app/data/gst_data_20251023_063717.csv
+2025-10-23 06:37:17 | INFO     | utils:save_to_csv:143 |    Records: 5, Size: 0.85 KB
+2025-10-23 06:37:17 | SUCCESS  | utils:save_to_json:172 | ✅ Data saved to JSON: /app/data/gst_data_20251023_063717.json
+2025-10-23 06:37:17 | INFO     | utils:save_to_json:173 |    Records: 5, Size: 1.97 KB
+2025-10-23 06:37:17 | SUCCESS  | __main__:main:318 | 🎉 Scraping completed successfully!
+2025-10-23 06:37:17 | INFO     | __main__:main:331 | ============================================================
+2025-10-23 06:37:17 | INFO     | __main__:main:332 | 🏁 GST Scraper finished
+2025-10-23 06:37:17 | INFO     | __main__:main:333 | ============================================================
+2025-10-23 06:38:20 | INFO     | __main__:main:294 | ============================================================
+2025-10-23 06:38:20 | INFO     | __main__:main:295 | 🚀 Starting GST Scraper
+2025-10-23 06:38:20 | INFO     | __main__:main:296 | ============================================================
+2025-10-23 06:38:20 | INFO     | __main__:__init__:47 | GST Scraper initialized
+2025-10-23 06:38:20 | INFO     | __main__:__init__:48 | Demo mode: True
+2025-10-23 06:38:20 | INFO     | __main__:__init__:49 | Max retries: 3
+2025-10-23 06:38:20 | INFO     | __main__:__init__:50 | Request timeout: 30s
+2025-10-23 06:38:20 | INFO     | __main__:generate_demo_data:186 | 🎭 Running in DEMO mode - generating sample data
+2025-10-23 06:38:20 | SUCCESS  | __main__:generate_demo_data:257 | ✅ Generated 5 demo records
+2025-10-23 06:38:20 | SUCCESS  | utils:save_to_csv:142 | ✅ Data saved to CSV: /app/data/gst_data_20251023_063820.csv
+2025-10-23 06:38:20 | INFO     | utils:save_to_csv:143 |    Records: 5, Size: 0.85 KB
+2025-10-23 06:38:20 | SUCCESS  | utils:save_to_json:172 | ✅ Data saved to JSON: /app/data/gst_data_20251023_063820.json
+2025-10-23 06:38:20 | INFO     | utils:save_to_json:173 |    Records: 5, Size: 1.97 KB
+2025-10-23 06:38:20 | SUCCESS  | __main__:main:318 | 🎉 Scraping completed successfully!
+2025-10-23 06:38:20 | INFO     | __main__:main:331 | ============================================================
+2025-10-23 06:38:20 | INFO     | __main__:main:332 | 🏁 GST Scraper finished
+2025-10-23 06:38:20 | INFO     | __main__:main:333 | ============================================================
