@@ -1,0 +1,6 @@
+gstin,legal_name,trade_name,registration_date,taxpayer_type,status,state,center_jurisdiction,state_jurisdiction,scraped_at,scraper_version
+27AAPFU0939F1ZV,UBER INDIA SYSTEMS PRIVATE LIMITED,UBER,01/07/2017,Regular,Active,Maharashtra,Mumbai Central,Mumbai State GST,2025-10-23 04:43:57,1.0
+29AABCT1332L1ZN,TATA CONSULTANCY SERVICES LIMITED,TCS,01/07/2017,Regular,Active,Karnataka,Bangalore Central,Karnataka State GST,2025-10-23 04:43:57,1.0
+27AADCI7885M1ZJ,RELIANCE RETAIL LIMITED,Reliance Retail,01/07/2017,Regular,Active,Maharashtra,Mumbai Central,Mumbai State GST,2025-10-23 04:43:57,1.0
+09AAACH7409R1ZN,HCL TECHNOLOGIES LIMITED,HCL Tech,01/07/2017,Regular,Active,Uttar Pradesh,Noida Central,UP State GST,2025-10-23 04:43:57,1.0
+29AAACI1681G1ZU,INFOSYS LIMITED,Infosys,01/07/2017,Regular,Active,Karnataka,Bangalore Central,Karnataka State GST,2025-10-23 04:43:57,1.0

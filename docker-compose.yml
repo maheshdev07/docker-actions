@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  gst-scraper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gst-scraper-container
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - DEMO_MODE=true
+      - DEBUG=true
+    restart: unless-stopped
+    command: ["python", "src/scraper.py"]
